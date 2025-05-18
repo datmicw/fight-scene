@@ -385,6 +385,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &150903321 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2122972254015428975, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
+  m_PrefabInstance: {fileID: 403100226}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &403100226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -449,6 +454,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2122972254015428975, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4824908180174947374, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
       propertyPath: animator
       value: 
@@ -479,10 +488,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
-    - {fileID: 3183690227938228834, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
-    - {fileID: 4824908180174947374, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
-    - {fileID: 3527315647001873977, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
-    - {fileID: 5327913280019497064, guid: 6e70ac2dd964f7e4798ba322509c7e7a, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -770,6 +779,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1943187249992631569, guid: 775cd3b427d63974d8703d8fc87cc3ce, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d66ade494b257bf42993a59795ed11f5, type: 2}
     - target: {fileID: 7421653487955196459, guid: 775cd3b427d63974d8703d8fc87cc3ce, type: 3}
       propertyPath: m_Name
       value: CharBoss_01
@@ -818,6 +831,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8300461699652426309, guid: 775cd3b427d63974d8703d8fc87cc3ce, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 150903321}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

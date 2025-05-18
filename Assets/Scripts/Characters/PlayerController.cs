@@ -1,23 +1,17 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : CharacterBase
 {
     [Header("References")]
-    public FloatingJoystick joystick; // tham chiếu đến joystick
+    public FloatingJoystick joystick;
 
     [Header("Settings")]
-    public float moveSpeed = 5f; // tốc độ di chuyển
-    public float punchDuration = 0.6f; // thời gian đấm
-
-    private CharacterController characterController; // tham chiếu đến character controller
-    private Animator animator; 
-    private bool isPunching; 
-
-    void Awake()
+    public float punchDuration = 0.6f;
+    private bool isPunching;
+    protected override void Awake()
     {
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        base.Awake();
         if (!joystick)
         {
             joystick = FindObjectOfType<FloatingJoystick>();
@@ -28,53 +22,59 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!isPunching)
-        {
-            HandleMovement();
-            HandlePunchInput();
-        }
+        if (!isAlive || isPunching) return;
+
+        HandleMovement();
+        HandlePunchInput();
     }
 
     void HandleMovement()
     {
-    Vector2 input = new Vector2(joystick.Horizontal, joystick.Vertical);
-    bool walking = input.sqrMagnitude > 0.01f;
+        Vector2 input = new Vector2(joystick.Horizontal, joystick.Vertical);
+        bool walking = input.sqrMagnitude > 0.01f;
 
-    if(animator.GetBool("isWalking") != walking)
-        animator.SetBool("isWalking", walking);
+        if (animator.GetBool("isWalking") != walking)
+            animator.SetBool("isWalking", walking);
 
-    if(walking)
-    {
-        Vector3 move = new Vector3(input.x, 0, input.y); 
-        move = Camera.main.transform.TransformDirection(move);
-        move.y = 0;
-        move.Normalize();
+        if (walking)
+        {
+            Vector3 move = new Vector3(input.x, 0, input.y);
+            move = Camera.main.transform.TransformDirection(move);
+            move.y = 0;
+            move.Normalize();
 
-        characterController.Move(move * moveSpeed * Time.deltaTime);
-        transform.forward = move;
+            characterController.Move(move * moveSpeed * Time.deltaTime);
+            transform.forward = move;
+        }
     }
-}
 
-
-    void HandlePunchInput() // kiểm tra xem có nhấn nút punch không
-    // kiểm tra xem có nhấn nút punch không
+    void HandlePunchInput()
     {
 #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0)) // nhấn chuột trái
+        if (Input.GetMouseButtonDown(0) && Time.time - lastAttackTime > attackCooldown)
 #else
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) // nhấn vào màn hình
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && Time.time - lastAttackTime > attackCooldown)
 #endif
         {
-            TriggerPunch(); 
+            TriggerPunch();
         }
     }
 
     void TriggerPunch()
     {
         isPunching = true;
-        animator.SetTrigger("Punching"); //punching trong animator
+        animator.SetTrigger("Punching");
         animator.SetBool("isWalking", false);
-        Invoke(nameof(EndPunch), punchDuration); // end punch sau 0.6 giây
+        lastAttackTime = Time.time;
+        Invoke(nameof(EndPunch), punchDuration);
+    }
+
+    public override void Attack(CharacterBase target)
+    {
+        if (Vector3.Distance(transform.position, target.transform.position) <= 2f)
+        {
+            target.TakeDamage(attackDamage);
+        }
     }
 
     void EndPunch()

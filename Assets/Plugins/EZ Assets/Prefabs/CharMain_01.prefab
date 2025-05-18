@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 4674081637985950127}
   - component: {fileID: 8631898655162419304}
   - component: {fileID: 9056180377141040408}
+  - component: {fileID: 7644942086347737698}
   m_Layer: 0
   m_Name: CharMain_01
   m_TagString: Untagged
@@ -287,8 +288,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af571b6a74212bc429dd39e298d39818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 0}
+  health: 100
   moveSpeed: 5
+  attackDamage: 10
+  attackCooldown: 1
+  joystick: {fileID: 0}
+  punchDuration: 0.6
+--- !u!136 &7644942086347737698
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122972254015428975}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.15
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &2211893352704014900
 GameObject:
   m_ObjectHideFlags: 0
