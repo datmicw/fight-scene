@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class CharacterControllerBase : MonoBehaviour
@@ -18,17 +19,25 @@ public abstract class CharacterControllerBase : MonoBehaviour
         model = new CharacterModel(health, speed, damage, cooldown);
     }
 
-    public virtual void TakeDamage(float amount)
+    public virtual void TakeDamage(float damage)
     {
-        model.TakeDamage(amount);
+        model.TakeDamage(damage);
         if (!model.IsAlive())
+        {
             Die();
+        }
     }
+
+
 
     protected virtual void Die()
     {
         view.SetActive(false); // dùng object pooling
     }
 
-    public abstract void Attack(CharacterControllerBase target);
+    internal string GetHealth()
+    {
+        // trả về máu
+        return $"{model.Health}/{model.MaxHealth}";
+    }
 }

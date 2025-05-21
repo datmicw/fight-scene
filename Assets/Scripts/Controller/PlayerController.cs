@@ -4,14 +4,18 @@ public class PlayerController : CharacterControllerBase
 {
     public FloatingJoystick joystick;
     public float punchDuration = 0.6f;
-    private UnityEngine.CharacterController characterMover;
+    [SerializeField] public int punchDamage = 10;
+
+    [SerializeField] private float moveSpeedMultiplier = 1f;
+
+    private CharacterController characterMover;
 
     protected override void Awake()
     {
         base.Awake();
-        characterMover = GetComponent<UnityEngine.CharacterController>();
+        characterMover = GetComponent<CharacterController>();
         joystick = FindObjectOfType<FloatingJoystick>();
-        InitializeModel(100, 5, 10, 1);
+        InitializeModel(100, 5, punchDamage, 1); // máu, tốc độ, sát thương, thời gian hồi chiêu
     }
 
     private void Update()
@@ -34,8 +38,9 @@ public class PlayerController : CharacterControllerBase
             move = Camera.main.transform.TransformDirection(move);
             move.y = 0;
             move.Normalize();
+            float currentSpeed = model.MoveSpeed * moveSpeedMultiplier;
 
-            characterMover.Move(move * model.MoveSpeed * Time.deltaTime);
+            characterMover.Move(move * currentSpeed * Time.deltaTime);
             view.FaceDirection(move);
         }
     }
@@ -66,11 +71,27 @@ public class PlayerController : CharacterControllerBase
         isPunching = false;
     }
 
-    public override void Attack(CharacterControllerBase target)
+    public void DealDamage()
     {
-        if (Vector3.Distance(transform.position, target.transform.position) <= 2f)
+        Collider[] hitEnemies = Physics.OverlapSphere(transform.position, 2f);
+        foreach (var hit in hitEnemies)
         {
-            target.TakeDamage(model.AttackDamage);
+            if (hit.CompareTag("Enemy"))
+            {
+                var enemy = hit.GetComponent<CharacterControllerBase>();
+                if (enemy != null && enemy != this)
+                {
+                    enemy.TakeDamage(model.AttackDamage);
+                    Debug.Log("Attack enemy: " + enemy.name);
+                    Debug.Log("Enemy nhận damage: " + model.AttackDamage);
+                    Debug.Log("Enemy còn lại: " + enemy.GetHealth());
+                }
+            }
         }
     }
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        moveSpeedMultiplier = multiplier;
+    }
 }
+

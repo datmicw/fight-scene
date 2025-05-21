@@ -28,7 +28,6 @@ public class CharacterView : MonoBehaviour
     {
         gameObject.SetActive(active);
     }
-
     public void FaceDirection(Vector3 direction)
     {
         if (direction == Vector3.zero) return;
