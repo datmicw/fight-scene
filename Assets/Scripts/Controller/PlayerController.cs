@@ -6,9 +6,10 @@ public class PlayerController : CharacterControllerBase
     public float punchDuration = 0.6f;
     [SerializeField] public int punchDamage = 10;
 
-    [SerializeField] private float moveSpeedMultiplier = 1f;
+    [SerializeField] private float moveSpeedMultiplier = .2f;
 
     private CharacterController characterMover;
+    
 
     protected override void Awake()
     {
@@ -66,10 +67,8 @@ public class PlayerController : CharacterControllerBase
         Invoke(nameof(EndPunch), punchDuration);
     }
 
-    private void EndPunch()
-    {
-        isPunching = false;
-    }
+    private void EndPunch() => isPunching = false;
+    public void SetSpeedMultiplier(float multiplier) => moveSpeedMultiplier = multiplier;
 
     public void DealDamage()
     {
@@ -88,10 +87,6 @@ public class PlayerController : CharacterControllerBase
                 }
             }
         }
-    }
-    public void SetSpeedMultiplier(float multiplier)
-    {
-        moveSpeedMultiplier = multiplier;
     }
 }
 

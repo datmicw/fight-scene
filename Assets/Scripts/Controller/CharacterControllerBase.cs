@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public abstract class CharacterControllerBase : MonoBehaviour
@@ -8,11 +7,15 @@ public abstract class CharacterControllerBase : MonoBehaviour
 
     protected float lastAttackTime;
     protected bool isPunching;
+    public CharacterModel Model => model;
+
 
     protected virtual void Awake()
     {
         view = GetComponent<CharacterView>();
+
     }
+
 
     public virtual void InitializeModel(float health, float speed, float damage, float cooldown)
     {
@@ -21,23 +24,43 @@ public abstract class CharacterControllerBase : MonoBehaviour
 
     public virtual void TakeDamage(float damage)
     {
+        if (model == null) return;
+
         model.TakeDamage(damage);
+
         if (!model.IsAlive())
         {
             Die();
         }
     }
-
-
-
     protected virtual void Die()
     {
-        view.SetActive(false); // dùng object pooling
+        Debug.Log("Die() called");
+        if (CompareTag("Enemy"))
+        {
+            var manager = FindObjectOfType<GameModeManager>();
+            if (manager != null)
+            {
+                manager.OnEnemyKilled(gameObject);
+            }
+        }
+        if (view != null)
+            view.SetActive(false);
     }
 
-    internal string GetHealth()
+    public void ResetHealth()
     {
-        // trả về máu
-        return $"{model.Health}/{model.MaxHealth}";
+        if (model == null) return;
+
+        model.Health = model.MaxHealth;
+        if (view != null)
+            view.SetActive(true); 
     }
+
+    internal string GetHealth() => model != null ? $"{model.Health}/{model.MaxHealth}" : "No Model";
+
+    public bool IsAlive() => model != null && model.IsAlive();
+
+    public void SetPunching(bool value) => isPunching = value;
+    public bool IsPunching() => isPunching;
 }

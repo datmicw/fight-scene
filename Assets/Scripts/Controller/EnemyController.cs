@@ -1,50 +1,46 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : CharacterControllerBase
 {
-    [SerializeField] private GameObject player;
     [SerializeField] private float stopDistance = 1.5f;
     [SerializeField] private float punchDuration = 0.6f;
     [SerializeField] private float moveSpeedFactor = 0.5f;
-    [SerializeField] public int punchDamage = 5;
 
-
-    private Transform playerTransform;
+    private Transform targetTransform;
+    private CharacterControllerBase targetController;
 
     protected override void Awake()
     {
         base.Awake();
-        InitializeModel(100, 3, punchDamage, 1); // máu, tốc độ, sát thương, thời gian hồi chiêu
-
-        if (!player)
-            player = GameObject.FindGameObjectWithTag("Player");
-
-        if (player)
-            playerTransform = player.transform;
+        InitializeModel(100, 3, 5, 1); // health, speed, damage, cooldown
     }
 
     private void Update()
     {
-        if (!model.IsAlive() || isPunching || playerTransform == null) return;
+        if (!model.IsAlive() || isPunching || targetTransform == null || targetController == null || !targetController.IsAlive())
+            return;
 
-        Vector3 toPlayer = playerTransform.position - transform.position;
-        float distance = toPlayer.magnitude;
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
 
         if (distance > stopDistance)
         {
-            MoveTowards(toPlayer);
+            MoveTowardsTarget();
         }
         else if (Time.time - lastAttackTime >= model.AttackCooldown)
         {
             StartPunch();
         }
     }
-
-    private void MoveTowards(Vector3 direction)
+    private void MoveTowardsTarget()
     {
-        Vector3 moveDir = direction.normalized;
-        transform.position += moveDir * (model.MoveSpeed * moveSpeedFactor * Time.deltaTime);
-        view.FaceDirection(moveDir);
+        Vector3 direction = (targetTransform.position - transform.position).normalized;
+        Vector3 targetPosition = transform.position + direction * model.MoveSpeed * moveSpeedFactor * Time.deltaTime;
+
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, model.MoveSpeed * moveSpeedFactor * Time.deltaTime);
+
+        view.FaceDirection(direction);
         view.SetEnemyWalking(true);
     }
 
@@ -56,35 +52,41 @@ public class EnemyController : CharacterControllerBase
         view.SetEnemyWalking(false);
         view.TriggerPunch();
 
-        Invoke(nameof(DealDamageToPlayer), punchDuration * 0.5f); // gây sát thương ở giữa đòn
-        Invoke(nameof(EndEnemyPunch), punchDuration);
+        Invoke(nameof(DealDamage), punchDuration * 0.5f);
+        Invoke(nameof(EndPunch), punchDuration);
     }
 
-    private void DealDamageToPlayer()
+    private void DealDamage()
     {
-        if (playerTransform == null) return;
+        if (targetController == null || !targetController.IsAlive()) return;
 
-        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        float distance = Vector3.Distance(transform.position, targetTransform.position);
         if (distance <= stopDistance + 0.2f)
         {
-            CharacterControllerBase target = playerTransform.GetComponent<CharacterControllerBase>();
-            if (target != null && target != this)
+            targetController.TakeDamage(model.AttackDamage);
+            Debug.Log($"Enemy dealt {model.AttackDamage} damage to {targetController.name}");
+            Debug.Log($"Target remaining health: {targetController.GetHealth()}");
+            WinLoseUI winLoseUI = FindObjectOfType<WinLoseUI>();
+            if (!targetController.IsAlive())
             {
-                target.TakeDamage(model.AttackDamage);
-                Debug.Log($"Enemy dealt {model.AttackDamage} damage to player.");
-                Debug.Log($"Player remaining health: {target.GetHealth()}");
+                Debug.Log($"{targetController.name} has been defeated!");
+                var manager = FindObjectOfType<GameModeManager>();
+                if (manager != null)
+                    manager.OnPlayerKilled(targetController.gameObject);
+
+                targetTransform = null;
+                targetController = null;
             }
+
         }
+
     }
 
-    private void EndEnemyPunch()
-    {
-        isPunching = false;
-    }
+    private void EndPunch() => isPunching = false;
 
-    public void OverrideStats(float health, float speed)
+    public void SetTarget(Transform target)
     {
-        model.Health = health;
-        model.MoveSpeed = speed;
+        targetTransform = target;
+        targetController = target != null ? target.GetComponent<CharacterControllerBase>() : null;
     }
 }

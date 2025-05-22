@@ -153,9 +153,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af571b6a74212bc429dd39e298d39818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 0}
+  damageTextPrefab: {fileID: 0}
+  damageSpawnPoint: {fileID: 0}
+  canvasTransform: {fileID: 0}
+  joystick: {fileID: 4817341826730774562, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
   punchDuration: 0.6
   punchDamage: 10
+  moveSpeedMultiplier: 1
 --- !u!114 &2063136526214446776
 MonoBehaviour:
   m_ObjectHideFlags: 0

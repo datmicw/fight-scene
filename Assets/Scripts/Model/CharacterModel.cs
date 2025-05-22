@@ -1,30 +1,25 @@
-using UnityEngine;
-
 public class CharacterModel
 {
-    public float Health { get; set; }
     public float MaxHealth { get; private set; }
+    public float Health { get; set; }
     public float MoveSpeed { get; set; }
-    public float AttackDamage { get; private set; }
+    public float AttackDamage { get; set; }
     public float AttackCooldown { get; private set; }
 
-    public CharacterModel(float health, float moveSpeed, float attackDamage, float attackCooldown)
+    public CharacterModel(float health, float speed, float damage, float cooldown)
     {
         MaxHealth = health;
         Health = health;
-        MoveSpeed = moveSpeed;
-        AttackDamage = attackDamage;
-        AttackCooldown = attackCooldown;
-    }
-
-    public bool IsAlive()
-    {
-        return Health > 0;
+        MoveSpeed = speed;
+        AttackDamage = damage;
+        AttackCooldown = cooldown;
     }
 
     public void TakeDamage(float damage)
     {
         Health -= damage;
-        if (Health < 0) Health = 0;
+        Health = UnityEngine.Mathf.Max(Health, 0);
     }
+
+    public bool IsAlive() => Health > 0;
 }
