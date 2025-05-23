@@ -33,7 +33,7 @@ public class EnemyController : CharacterControllerBase
             StartPunch();
         }
     }
-    private void MoveTowardsTarget()
+    private void MoveTowardsTarget() // enemy di chuyển về phía player
     {
         Vector3 direction = (targetTransform.position - transform.position).normalized;
         Vector3 targetPosition = transform.position + direction * model.MoveSpeed * moveSpeedFactor * Time.deltaTime;
@@ -56,23 +56,23 @@ public class EnemyController : CharacterControllerBase
         Invoke(nameof(EndPunch), punchDuration);
     }
 
-    private void DealDamage()
+    private void DealDamage() // enemy tấn công player
     {
         if (targetController == null || !targetController.IsAlive()) return;
 
         float distance = Vector3.Distance(transform.position, targetTransform.position);
         if (distance <= stopDistance + 0.2f)
         {
-            targetController.TakeDamage(model.AttackDamage);
+            targetController.TakeDamage(model.AttackDamage); // enemy tấn công player
             Debug.Log($"Enemy dealt {model.AttackDamage} damage to {targetController.name}");
-            Debug.Log($"Target remaining health: {targetController.GetHealth()}");
-            WinLoseUI winLoseUI = FindObjectOfType<WinLoseUI>();
+            Debug.Log($"Target remaining health: {targetController.GetHealth()}"); 
+            WinLoseUI winLoseUI = FindObjectOfType<WinLoseUI>(); // hiển thị thông báo
             if (!targetController.IsAlive())
             {
                 Debug.Log($"{targetController.name} has been defeated!");
                 var manager = FindObjectOfType<GameModeManager>();
                 if (manager != null)
-                    manager.OnPlayerKilled(targetController.gameObject);
+                    manager.OnPlayerKilled(targetController.gameObject); // enemy thắng
 
                 targetTransform = null;
                 targetController = null;

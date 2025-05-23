@@ -1300,9 +1300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94d577ebaa017eb488c78c6d2e64dd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageTextPrefab: {fileID: 0}
-  damageSpawnPoint: {fileID: 5220830872098627783}
-  canvasTransform: {fileID: 7502904581262608259}
   stopDistance: 0.5
   punchDuration: 0.6
   moveSpeedFactor: 0.5

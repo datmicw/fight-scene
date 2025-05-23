@@ -435,7 +435,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1431453582}
         m_TargetAssemblyTypeName: WinLoseUI, Assembly-CSharp
         m_MethodName: OnMainMenuButton
         m_Mode: 1
@@ -800,7 +800,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: sdfdfsdfsdfsfs
+  m_Text: WIN LOSE
 --- !u!1 &695404047
 GameObject:
   m_ObjectHideFlags: 0
@@ -1957,6 +1957,57 @@ Transform:
   - {fileID: 169143537}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1417389269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1417389271}
+  - component: {fileID: 1417389270}
+  m_Layer: 0
+  m_Name: ObjectPooling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1417389270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417389269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f6c3f347aa4984aa6a8ff05c4ebbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pools:
+  - tag: Enemy
+    prefab: {fileID: 7496893879810255892, guid: 84f5b15c344adca46b81fccac1e1c59d, type: 3}
+    size: 30
+  - tag: Player
+    prefab: {fileID: 98868659758265113, guid: 56c208da1720cd944b830510624329df, type: 3}
+    size: 30
+--- !u!4 &1417389271
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417389269}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 575.0529, y: 1935.2134, z: -15.109734}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1431453576
 GameObject:
   m_ObjectHideFlags: 0
@@ -2323,7 +2374,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1431453582}
         m_TargetAssemblyTypeName: WinLoseUI, Assembly-CSharp
         m_MethodName: OnRestartButton
         m_Mode: 1
@@ -2448,3 +2499,4 @@ SceneRoots:
   - {fileID: 1292678474}
   - {fileID: 1347614247}
   - {fileID: 220421676}
+  - {fileID: 1417389271}
