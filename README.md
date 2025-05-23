@@ -1,4 +1,4 @@
-# 🥊 Boxing Arena: Multi Mode Combat
+# 🥊 Boxing: Multi Mode Combat
 
 ## 🎮 Giới thiệu
 
