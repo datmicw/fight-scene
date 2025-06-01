@@ -41,24 +41,6 @@ public abstract class CharacterControllerBase : MonoBehaviour
     {
         view.SetActive(false); // ẩn view
         gameObject.SetActive(false); // ẩn object, dùng object pooling
-
-        // nếu là enemy thì báo cho GameModeManager
-        if (CompareTag("Enemy"))
-        {
-            var manager = FindObjectOfType<GameModeManager>();
-            // gọi hàm khi enemy bị giết
-            if (manager != null)
-                manager.OnEnemyKilled(gameObject);
-        }
-
-        // nếu là player thì báo cho GameModeManager
-        if (CompareTag("Player"))
-        {
-            var manager = FindObjectOfType<GameModeManager>();
-            // gọi hàm khi player bị giết
-            if (manager != null)
-                manager.OnPlayerKilled(gameObject);
-        }
     }
 
     // reset máu khi bắt đầu level mới

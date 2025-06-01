@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 3840680873946447575}
   - component: {fileID: 8592682891359135573}
   - component: {fileID: 2063136526214446776}
+  - component: {fileID: 7935837823430855188}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -153,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af571b6a74212bc429dd39e298d39818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 4817341826730774562, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
+  movement: {fileID: 7935837823430855188}
   punchDuration: 0.6
   punchDamage: 10
   moveSpeedMultiplier: 1
@@ -169,6 +170,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb4f22acfd8451b4fb5003d2c6784cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7935837823430855188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98868659758265113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cfbb44ece5711c4cbbbf19458e1a4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 100
+  cameraTransform: {fileID: 0}
 --- !u!1 &198727423686725929
 GameObject:
   m_ObjectHideFlags: 0

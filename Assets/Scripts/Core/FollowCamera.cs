@@ -2,24 +2,22 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offset = new Vector3(0, 5, -7);
-    [SerializeField] private float smoothSpeed = 5f;
+    public Transform target;
+    public Vector3 offset = new Vector3(0, 5, -6);
+    public float smoothSpeed = 10f;
 
-    private void LateUpdate() // lateupdate được gọi sau update, dùng để xử lý camera
+    void LateUpdate()
     {
-        FollowTarget();
-    }
+        if (target == null) return;
 
-    private void FollowTarget()
-    {
-        if (!target) return;
-        var desiredPosition = target.position + offset;
+        Vector3 desiredPosition = target.position + Quaternion.Euler(0, target.eulerAngles.y, 0) * offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        transform.LookAt(target, Vector3.up);
-    }
-    public void SetTarget(Transform newTarget)
-    {
-        target = newTarget;
+
+        // Camera tự nhìn về player, không ép góc nghiêng cứng
+        Vector3 lookDirection = (target.position + Vector3.up * 1.5f) - transform.position;
+        if (lookDirection.sqrMagnitude > 0.001f)
+        {
+            transform.rotation = Quaternion.LookRotation(lookDirection.normalized);
+        }
     }
 }
