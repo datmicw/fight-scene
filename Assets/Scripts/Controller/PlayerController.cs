@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : CharacterControllerBase
 {
-    public MovementPlayer movement;
+    private IInputProvider input;
     public float mouseSensitivity = 100f;  // Thêm tốc độ chuột
     public float punchDuration = 0.6f;
     [SerializeField] public int punchDamage = 10;
@@ -14,7 +14,7 @@ public class PlayerController : CharacterControllerBase
     {
         base.Awake();
         characterMover = GetComponent<CharacterController>();
-        movement = FindObjectOfType<MovementPlayer>();
+        input = GetComponent<IInputProvider>();
         InitializeModel(100, 5, punchDamage, 1);
     }
 
@@ -29,27 +29,28 @@ public class PlayerController : CharacterControllerBase
 
     private void HandleRotation()
     {
-        if (Mathf.Abs(movement.MouseX) > 0.01f)
+        float mouseX = input.GetMouseX();
+        if (Mathf.Abs(mouseX) > 0.01f)
         {
-            transform.Rotate(Vector3.up * movement.MouseX * mouseSensitivity * Time.deltaTime);
+            transform.Rotate(Vector3.up * mouseX * mouseSensitivity * Time.deltaTime);
         }
     }
 
+    private void EndPunch() => isPunching = false;
+
+    public void SetSpeedMultiplier(float multiplier) => moveSpeedMultiplier = multiplier;
     private void HandleMovement()
     {
-        if (movement.Vertical > 0.1f)
+        float move = input.GetMoveInput();
+        if (move > 0.1f)
         {
-            Vector3 move = transform.forward;
-            float currentSpeed = model.MoveSpeed * moveSpeedMultiplier;
-
-            characterMover.Move(move * currentSpeed * Time.deltaTime);
-            view.FaceDirection(move);
+            Vector3 direction = transform.forward;
+            float speed = model.MoveSpeed * moveSpeedMultiplier;
+            characterMover.Move(direction * speed * Time.deltaTime);
+            view.FaceDirection(direction);
             view.SetWalking(true);
         }
-        else
-        {
-            view.SetWalking(false);
-        }
+        else view.SetWalking(false);
     }
 
     private void HandleInput()
@@ -73,10 +74,6 @@ public class PlayerController : CharacterControllerBase
         Invoke(nameof(EndPunch), punchDuration);
     }
 
-    private void EndPunch() => isPunching = false;
-
-    public void SetSpeedMultiplier(float multiplier) => moveSpeedMultiplier = multiplier;
-
     public void DealDamage()
     {
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, 2f);
@@ -94,4 +91,3 @@ public class PlayerController : CharacterControllerBase
         }
     }
 }
-    

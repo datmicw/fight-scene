@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// lớp cơ sở cho controller của nhân vật
 public abstract class CharacterControllerBase : MonoBehaviour
 {
     protected CharacterModel model; // dữ liệu nhân vật
@@ -26,31 +25,24 @@ public abstract class CharacterControllerBase : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         if (model == null) return;
-
         model.TakeDamage(damage);
-
         // nếu chết thì gọi Die
-        if (!model.IsAlive())
-        {
-            Die();
-        }
+        if (!model.IsAlive()) Die();
     }
 
     // xử lý khi chết
     protected virtual void Die()
     {
         view.SetActive(false); // ẩn view
-        gameObject.SetActive(false); // ẩn object, dùng object pooling
+        Debug.Log($"{gameObject.name} has died.");
     }
 
     // reset máu khi bắt đầu level mới
     public void ResetHealth()
     {
         if (model == null) return;
-
         model.Health = model.MaxHealth;
-        if (view != null)
-            view.SetActive(true);
+        if (view != null) view.SetActive(true);
     }
 
     // trả về chuỗi máu hiện tại

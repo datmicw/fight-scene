@@ -1,4 +1,6 @@
-public class CharacterModel
+using UnityEngine;
+
+public class CharacterModel : ICharacterModel
 {
     public float MaxHealth { get; private set; }
     public float Health { get; set; }
@@ -17,8 +19,7 @@ public class CharacterModel
 
     public void TakeDamage(float damage)
     {
-        Health -= damage;
-        Health = UnityEngine.Mathf.Max(Health, 0);
+        Health = Mathf.Max(Health - damage, 0);
     }
 
     public bool IsAlive() => Health > 0;

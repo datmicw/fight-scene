@@ -12,8 +12,6 @@ public class FollowCamera : MonoBehaviour
 
         Vector3 desiredPosition = target.position + Quaternion.Euler(0, target.eulerAngles.y, 0) * offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-
-        // Camera tự nhìn về player, không ép góc nghiêng cứng
         Vector3 lookDirection = (target.position + Vector3.up * 1.5f) - transform.position;
         if (lookDirection.sqrMagnitude > 0.001f)
         {
