@@ -7,6 +7,7 @@ public abstract class CharacterControllerBase : MonoBehaviour
 
     protected float lastAttackTime; // thời gian tấn công cuối cùng
     protected bool isPunching;      // trạng thái đang đấm
+    protected bool isHeadPunching;  // trạng thái đang đấm đầu
     public CharacterModel Model => model; // trả về model
 
     // hàm khởi tạo, lấy view từ component
@@ -40,9 +41,9 @@ public abstract class CharacterControllerBase : MonoBehaviour
     // reset máu khi bắt đầu level mới
     public void ResetHealth()
     {
-        if (model == null) return;
-        model.Health = model.MaxHealth;
-        if (view != null) view.SetActive(true);
+        if (model == null) return; // nếu không tồn tại model thì không làm gì
+        model.Health = model.MaxHealth; // đặt lại máu về tối đa
+        if (view != null) view.SetActive(true); // hiển thị lại view nếu có
     }
 
     // trả về chuỗi máu hiện tại
@@ -55,4 +56,7 @@ public abstract class CharacterControllerBase : MonoBehaviour
     public void SetPunching(bool value) => isPunching = value;
     // kiểm tra có đang đấm không
     public bool IsPunching() => isPunching;
+    public void SetHeadPunching(bool value) => isHeadPunching = value;
+    // kiểm tra có đang đấm đầu không
+    public bool IsHeadPunching() => isHeadPunching;
 }

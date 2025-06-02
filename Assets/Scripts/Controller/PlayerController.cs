@@ -3,28 +3,38 @@ using UnityEngine;
 public class PlayerController : CharacterControllerBase
 {
     private IInputProvider input;
-    public float mouseSensitivity = 100f;  // Thêm tốc độ chuột
+
+    public float mouseSensitivity = 100f;
     public float punchDuration = 0.6f;
+
     [SerializeField] public int punchDamage = 10;
     [SerializeField] private float moveSpeedMultiplier = 0.2f;
 
     private CharacterController characterMover;
+
+    private enum AttackState { None, Punch, HeadPunch }
+    private AttackState attackState = AttackState.None;
 
     protected override void Awake()
     {
         base.Awake();
         characterMover = GetComponent<CharacterController>();
         input = GetComponent<IInputProvider>();
+
+        if (input == null) Debug.LogError("IInputProvider not found.");
+        if (view == null) Debug.LogError("View not assigned.");
+
         InitializeModel(100, 5, punchDamage, 1);
     }
 
     private void Update()
     {
-        if (!model.IsAlive() || isPunching) return;
+        if (!model.IsAlive() || attackState != AttackState.None) return;
 
         HandleRotation();
         HandleMovement();
         HandleInput();
+        HandleHeadPunchInput();
     }
 
     private void HandleRotation()
@@ -36,9 +46,6 @@ public class PlayerController : CharacterControllerBase
         }
     }
 
-    private void EndPunch() => isPunching = false;
-
-    public void SetSpeedMultiplier(float multiplier) => moveSpeedMultiplier = multiplier;
     private void HandleMovement()
     {
         float move = input.GetMoveInput();
@@ -50,7 +57,10 @@ public class PlayerController : CharacterControllerBase
             view.FaceDirection(direction);
             view.SetWalking(true);
         }
-        else view.SetWalking(false);
+        else
+        {
+            view.SetWalking(false);
+        }
     }
 
     private void HandleInput()
@@ -65,14 +75,34 @@ public class PlayerController : CharacterControllerBase
         }
     }
 
+    private void HandleHeadPunchInput()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && Time.time - lastAttackTime > model.AttackCooldown)
+        {
+            StartHeadPunch();
+        }
+    }
+
     private void StartPunch()
     {
-        isPunching = true;
+        attackState = AttackState.Punch;
         view.TriggerPunch();
         view.SetWalking(false);
         lastAttackTime = Time.time;
         Invoke(nameof(EndPunch), punchDuration);
     }
+
+    private void StartHeadPunch()
+    {
+        attackState = AttackState.HeadPunch;
+        view.SetHeadPunch();
+        view.SetWalking(false);
+        lastAttackTime = Time.time;
+        Invoke(nameof(EndHeadPunch), punchDuration);
+    }
+
+    private void EndPunch() => attackState = AttackState.None;
+    private void EndHeadPunch() => attackState = AttackState.None;
 
     public void DealDamage()
     {
@@ -81,11 +111,15 @@ public class PlayerController : CharacterControllerBase
         {
             if (hit.CompareTag("Enemy"))
             {
-                var enemy = hit.GetComponent<CharacterControllerBase>();
-                if (enemy != null && enemy != this)
+                Vector3 toEnemy = (hit.transform.position - transform.position).normalized;
+                if (Vector3.Dot(transform.forward, toEnemy) > 0.5f)
                 {
-                    enemy.TakeDamage(model.AttackDamage);
-                    Debug.Log("Tấn công enemy: " + enemy.name);
+                    var enemy = hit.GetComponent<CharacterControllerBase>();
+                    if (enemy != null && enemy != this)
+                    {
+                        enemy.TakeDamage(model.AttackDamage);
+                        Debug.Log("Tấn công enemy: " + enemy.name);
+                    }
                 }
             }
         }

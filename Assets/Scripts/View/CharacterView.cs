@@ -7,6 +7,7 @@ public class CharacterView : MonoBehaviour
     private void Awake() => Animator = GetComponent<Animator>();
     public void SetWalking(bool walking) => Animator.SetBool("isWalking", walking);
     public void TriggerPunch() => Animator.SetTrigger("Punching");
+    public void SetHeadPunch() => Animator.SetTrigger("HeadPunch");
     public void SetActive(bool active) => gameObject.SetActive(active);
     public void FaceDirection(Vector3 direction)
     {
