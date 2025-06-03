@@ -3,7 +3,8 @@ using UnityEngine;
 public abstract class CharacterControllerBase : MonoBehaviour
 {
     protected CharacterModel model; // dữ liệu nhân vật
-    protected CharacterView view;   // hiển thị nhân vật
+    [SerializeField] protected CharacterView view;
+
 
     protected float lastAttackTime; // thời gian tấn công cuối cùng
     protected bool isPunching;      // trạng thái đang đấm
@@ -13,7 +14,7 @@ public abstract class CharacterControllerBase : MonoBehaviour
     // hàm khởi tạo, lấy view từ component
     protected virtual void Awake()
     {
-        view = GetComponent<CharacterView>();
+        if (view == null) view = GetComponent<CharacterView>();
     }
 
     // khởi tạo model với các chỉ số
@@ -24,12 +25,24 @@ public abstract class CharacterControllerBase : MonoBehaviour
 
     // nhận sát thương
     public virtual void TakeDamage(float damage)
+{
+    if (model == null)
     {
-        if (model == null) return;
-        model.TakeDamage(damage);
-        // nếu chết thì gọi Die
-        if (!model.IsAlive()) Die();
+        Debug.LogError($"{gameObject.name} chưa có model.");
+        return;
     }
+
+    float before = model.Health;
+    model.TakeDamage(damage);
+    Debug.Log($"{gameObject.name} nhận {damage} damage. Máu: {before} → {model.Health}");
+
+    if (!model.IsAlive())
+    {
+        Debug.Log($"{gameObject.name} ĐÃ CHẾT");
+        Die();
+    }
+}
+
 
     // xử lý khi chết
     protected virtual void Die()
