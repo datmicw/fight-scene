@@ -1,19 +1,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// lớp tĩnh để quản lý việc chuyển cảnh
 public static class SceneLoader
 {
-    // hàm để chuyển sang cảnh chiến đấu
+    // Tên scene fight trong Build Settings, thay đổi nếu khác
+    private const string FightSceneName = "FightScene";
+
     public static void LoadFightScene()
     {
-        SceneManager.LoadScene("FightScene");
+        SceneManager.LoadScene(FightSceneName);
     }
 
-    // hàm để thoát game
     public static void QuitGame()
     {
-        Debug.Log("Quitting game...");
         Application.Quit();
     }
 }

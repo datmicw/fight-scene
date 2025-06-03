@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // Yêu cầu component Rigidbody phải có trên object
@@ -22,17 +23,19 @@ public class BoxingEnemyAI : CharacterControllerBase
         InitializeModel(100, 5, 5, 1); // máu, tốc độ, sát thương, cooldown
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        if (PlayerManager.Instance != null && PlayerManager.Instance.Player != null)
+        // Đợi PlayerManager và Player được gán xong
+        while (PlayerManager.Instance == null || PlayerManager.Instance.Player == null)
         {
-            player = PlayerManager.Instance.Player.transform;
+            Debug.Log("Đang đợi PlayerManager gán Player...");
+            yield return null;
         }
-        else
-        {
-            Debug.LogError("Player không tồn tại trong PlayerManager.");
-        }
+
+        player = PlayerManager.Instance.Player.transform;
+        Debug.Log("Player đã được gán trong BoxingEnemyAI.");
     }
+
 
     private void FixedUpdate()
     {
@@ -112,12 +115,5 @@ public class BoxingEnemyAI : CharacterControllerBase
                 }
             }
         }
-    }
-
-    // Debug hình cầu va chạm trong Scene view
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
