@@ -136,7 +136,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af571b6a74212bc429dd39e298d39818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  view: {fileID: 0}
   mouseSensitivity: 100
   punchDuration: 0.6
   punchDamage: 10
@@ -480,6 +481,7 @@ GameObject:
   m_Component:
   - component: {fileID: 153268799981237285}
   - component: {fileID: 3747966292349593504}
+  - component: {fileID: 2636981406917167018}
   m_Layer: 0
   m_Name: 'FollowCamera '
   m_TagString: Untagged
@@ -517,6 +519,18 @@ MonoBehaviour:
   target: {fileID: 1472534878499146288}
   offset: {x: -10, y: 20, z: -8}
   smoothSpeed: 10
+--- !u!114 &2636981406917167018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3452046160149961398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7773aea7a8281548b95b8af26836936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3461194607445158576
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,13 +1339,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8594427562274392119}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08715578, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 1.2, z: -4}
+  m_LocalRotation: {x: 0.18448274, y: 0.005417973, z: 0.009284929, w: 0.98277694}
+  m_LocalPosition: {x: 0, y: 2.479, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1092361850070233266}
-  m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 21.254, y: 0.865, z: 1.245}
 --- !u!20 &7175626968770362944
 Camera:
   m_ObjectHideFlags: 0

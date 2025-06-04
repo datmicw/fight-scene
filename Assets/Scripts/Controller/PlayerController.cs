@@ -1,24 +1,16 @@
 using UnityEngine;
 
-// lớp điều khiển người chơi kế thừa từ CharacterControllerBase
 public class PlayerController : CharacterControllerBase
 {
-    private IInputProvider input; // lưu input provider
-
-    public float mouseSensitivity = 100f; // độ nhạy chuột
-    public float punchDuration = 0.6f; // thời gian ra đòn
-
-    // thuộc tính punchDamage không cần [SerializeField] vì đã là public
+    private IInputProvider input;
+    public float mouseSensitivity = 100f;
+    public float punchDuration = 0.6f;
     public int punchDamage = 10;
-    [SerializeField] private float moveSpeedMultiplier = 0.2f; // hệ số tốc độ di chuyển
+    [SerializeField] private float moveSpeedMultiplier = 0.2f;
+    private CharacterController characterMover;
 
-    private CharacterController characterMover; // component di chuyển
-
-    // trạng thái tấn công
     private enum AttackState { None, Punch, HeadPunch }
     private AttackState attackState = AttackState.None;
-
-    // hàm khởi tạo
     protected override void Awake()
     {
         base.Awake();
@@ -28,23 +20,18 @@ public class PlayerController : CharacterControllerBase
         if (input == null) Debug.LogError("IInputProvider not found.");
         if (view == null) Debug.LogError("View not assigned.");
 
-        InitializeModel(100, 5, punchDamage, 1); // khởi tạo model với máu, tốc độ, damage, cooldown
+        InitializeModel(100, 5, punchDamage, 1);
         Debug.Log($"[Player] Initialized: HP={model.Health}, Damage={model.AttackDamage}");
-
     }
-
-    // hàm update mỗi frame
     private void Update()
     {
         if (!model.IsAlive() || attackState != AttackState.None) return;
 
-        HandleRotation(); // xử lý xoay
-        HandleMovement(); // xử lý di chuyển
-        HandleInput(); // xử lý input tấn công thường
-        HandleHeadPunchInput(); // xử lý input tấn công đặc biệt
+        HandleRotation();
+        HandleMovement();
+        HandleInput();
+        HandleHeadPunchInput();
     }
-
-    // xử lý xoay theo chuột
     private void HandleRotation()
     {
         float mouseX = input.GetMouseX();
@@ -53,8 +40,6 @@ public class PlayerController : CharacterControllerBase
             transform.Rotate(Vector3.up * mouseX * mouseSensitivity * Time.deltaTime);
         }
     }
-
-    // xử lý di chuyển
     private void HandleMovement()
     {
         float move = input.GetMoveInput();
@@ -71,8 +56,6 @@ public class PlayerController : CharacterControllerBase
             view.SetWalking(false);
         }
     }
-
-    // xử lý input tấn công thường
     private void HandleInput()
     {
 #if UNITY_EDITOR
@@ -84,8 +67,6 @@ public class PlayerController : CharacterControllerBase
             StartPunch();
         }
     }
-
-    // xử lý input tấn công đặc biệt (head punch)
     private void HandleHeadPunchInput()
     {
         if (Input.GetKeyDown(KeyCode.F) && Time.time - lastAttackTime > model.AttackCooldown)
@@ -93,33 +74,27 @@ public class PlayerController : CharacterControllerBase
             StartHeadPunch();
         }
     }
-
-    // bắt đầu tấn công thường
     private void StartPunch()
     {
         attackState = AttackState.Punch;
         view.TriggerPunch();
         view.SetWalking(false);
         lastAttackTime = Time.time;
+        CameraEffectsManager.Instance.Shake();
         Invoke(nameof(EndPunch), punchDuration);
     }
 
-    // bắt đầu tấn công đặc biệt
     private void StartHeadPunch()
     {
         attackState = AttackState.HeadPunch;
         view.SetHeadPunch();
         view.SetWalking(false);
         lastAttackTime = Time.time;
+        CameraEffectsManager.Instance.Zoom();
         Invoke(nameof(EndHeadPunch), punchDuration);
     }
-
-    // kết thúc tấn công thường
     private void EndPunch() => attackState = AttackState.None;
-    // kết thúc tấn công đặc biệt
     private void EndHeadPunch() => attackState = AttackState.None;
-
-    // hàm gây sát thương cho enemy trong bán kính
     public void DealDamage()
     {
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, 2f);

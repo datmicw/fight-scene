@@ -1,26 +1,84 @@
+using System.Collections;
 using UnityEngine;
 
-// lớp này dùng để camera đi theo một đối tượng (target)
 public class FollowCamera : MonoBehaviour
 {
-    public Transform target; // đối tượng mà camera sẽ theo dõi
-    public Vector3 offset = new Vector3(0, 5, -6); // khoảng cách giữa camera và target
-    public float smoothSpeed = 10f; // tốc độ làm mượt chuyển động camera
+    public Transform target;
+    public Vector3 offset = new Vector3(0, 5, -6);
+    public float smoothSpeed = 10f;
+
+    private float shakeDuration = 0f;
+    private float shakeMagnitude = 0.2f;
+
+    private Vector3 originalOffset;
+    private bool isZooming = false;
+
+    void Start()
+    {
+        originalOffset = offset;
+    }
 
     void LateUpdate()
     {
-        if (target == null) return; // nếu không có target thì không làm gì
-        
-        // tính vị trí mong muốn của camera dựa trên vị trí của target và offset đã xoay theo hướng của target
-        Vector3 desiredPosition = target.position + Quaternion.Euler(0, target.eulerAngles.y, 0) * offset;
-        // di chuyển camera từ vị trí hiện tại đến vị trí mong muốn một cách mượt mà
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        // xác định hướng nhìn của camera, nhìn về phía target và cao hơn 1.5 đơn vị
-        Vector3 lookDirection = (target.position + Vector3.up * 1.5f) - transform.position;
-        if (lookDirection.sqrMagnitude > 0.001f) // kiểm tra xem hướng nhìn có khác biệt không
+        if (target == null) return;
+
+        Vector3 currentOffset = isZooming ? offset : originalOffset;
+
+        if (shakeDuration > 0)
         {
-            // xoay camera để nhìn về phía target
+            currentOffset += Random.insideUnitSphere * shakeMagnitude;
+            shakeDuration -= Time.deltaTime;
+        }
+
+        Vector3 desiredPosition = target.position + Quaternion.Euler(0, target.eulerAngles.y, 0) * currentOffset;
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+
+        Vector3 lookDirection = (target.position + Vector3.up * 1.5f) - transform.position;
+        if (lookDirection.sqrMagnitude > 0.001f)
+        {
             transform.rotation = Quaternion.LookRotation(lookDirection.normalized);
         }
+    }
+
+    public void TriggerShake(float duration, float magnitude)
+    {
+        shakeDuration = duration;
+        shakeMagnitude = magnitude;
+    }
+
+    public void TriggerZoom(float zoomMultiplier = 0.7f, float duration = 0.5f)
+    {
+        if (isZooming) return;
+        StartCoroutine(ZoomInOut(zoomMultiplier, duration));
+    }
+
+    private IEnumerator ZoomInOut(float zoomMultiplier, float duration)
+    {
+        isZooming = true;
+        Vector3 zoomedOffset = originalOffset * zoomMultiplier;
+
+        // Zoom in
+        float t = 0f;
+        while (t < 1f)
+        {
+            offset = Vector3.Lerp(originalOffset, zoomedOffset, t);
+            t += Time.deltaTime / (duration / 2f);
+            yield return null;
+        }
+
+        // Wait briefly
+        yield return new WaitForSeconds(0.1f);
+
+        // Zoom out
+        t = 0f;
+        while (t < 1f)
+        {
+            offset = Vector3.Lerp(zoomedOffset, originalOffset, t);
+            t += Time.deltaTime / (duration / 2f);
+            yield return null;
+        }
+
+        offset = originalOffset;
+        isZooming = false;
     }
 }

@@ -1,58 +1,60 @@
 using System.Collections;
 using UnityEngine;
-
-// Yêu cầu component Rigidbody phải có trên object
 [RequireComponent(typeof(Rigidbody))]
 public class BoxingEnemyAI : CharacterControllerBase
 {
-    private Transform player; // Lưu transform của player
-    private Rigidbody rb;     // Lưu rigidbody của enemy
-
+    private Transform player;
+    private Rigidbody rb;
     [Header("Boxing Settings")]
-    [SerializeField] private float attackRange = 1f; // Khoảng cách tấn công
-    [SerializeField] private float moveSpeed = 2f;   // Tốc độ di chuyển
-
-    private bool hasDealtDamageThisPunch = false;    // Đã gây damage trong đòn này chưa
-
-    // Khởi tạo các thành phần cần thiết
+    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private float moveSpeed = 2f;
+    private bool hasDealtDamageThisPunch = false;
+    public System.Action onDeath;
     protected override void Awake()
     {
         base.Awake();
         rb = GetComponent<Rigidbody>();
         view = GetComponent<CharacterView>();
-        InitializeModel(100, 5, 5, 1); // máu, tốc độ, sát thương, cooldown
+        InitializeModel(100, 5, 5, 1);
     }
-
     private IEnumerator Start()
     {
-        // Đợi PlayerManager và Player được gán xong
-        while (PlayerManager.Instance == null || PlayerManager.Instance.Player == null)
+        while (player == null)
         {
-            Debug.Log("Đang đợi PlayerManager gán Player...");
+            if (PlayerManager.Instance != null && PlayerManager.Instance.Player != null)
+            {
+                player = PlayerManager.Instance.Player.transform;
+                Debug.Log("Player assigned to Enemy in Start: " + player.name);
+            }
             yield return null;
         }
-
-        player = PlayerManager.Instance.Player.transform;
-        Debug.Log("Player đã được gán trong BoxingEnemyAI.");
     }
-
-
     private void FixedUpdate()
     {
-        if (player == null || !IsAlive()) return;
-
+        if (player == null)
+        {
+            Debug.LogWarning("Enemy has no target player!");
+            return;
+        }
+        if (!IsAlive())
+        {
+            Debug.Log("Enemy is dead, no action.");
+            return;
+        }
         Vector3 direction = player.position - transform.position;
         direction.y = 0;
-
         float distance = direction.magnitude;
         view.FaceDirection(direction);
-
         if (distance > attackRange)
         {
             if (!isPunching)
             {
                 MoveTowards(direction.normalized);
                 view.SetWalking(true);
+            }
+            else
+            {
+                view.SetWalking(false);
             }
         }
         else
@@ -61,15 +63,12 @@ public class BoxingEnemyAI : CharacterControllerBase
             TryAttack();
         }
     }
-
     private void MoveTowards(Vector3 direction)
     {
         Vector3 move = direction * moveSpeed * Time.fixedDeltaTime;
         Vector3 newPosition = rb.position + move;
         rb.MovePosition(newPosition);
     }
-
-    // Gọi khi đủ điều kiện tấn công
     private void TryAttack()
     {
         if (Time.time - lastAttackTime >= model.AttackCooldown && !isPunching)
@@ -77,27 +76,19 @@ public class BoxingEnemyAI : CharacterControllerBase
             lastAttackTime = Time.time;
             isPunching = true;
             hasDealtDamageThisPunch = false;
-
-            view.TriggerPunch(); // gọi animation đấm, animation sẽ gọi DealDamage()
-            Invoke(nameof(EndPunch), 0.6f); // kết thúc đấm sau thời gian phù hợp với animation
+            view.TriggerPunch();
+            Invoke(nameof(EndPunch), 0.6f);
         }
     }
-
-    // Hàm kết thúc đấm (reset lại trạng thái)
     private void EndPunch()
     {
         isPunching = false;
         hasDealtDamageThisPunch = false;
     }
-
-    // Gây sát thương nếu player trong phạm vi và ở trước mặt
-    // Được gọi qua Animation Event
     private void DealDamage()
     {
         if (!isPunching || hasDealtDamageThisPunch) return;
-
         hasDealtDamageThisPunch = true;
-
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, attackRange);
         foreach (var hit in hitEnemies)
         {
@@ -110,10 +101,19 @@ public class BoxingEnemyAI : CharacterControllerBase
                     if (playerCtrl != null && playerCtrl != this && playerCtrl.IsAlive())
                     {
                         playerCtrl.TakeDamage(model.AttackDamage);
-                        Debug.Log($"Tấn công player: {playerCtrl.name} - Sát thương: {model.AttackDamage}");
                     }
                 }
             }
         }
+    }
+    protected override void Die()
+    {
+        onDeath?.Invoke();
+        Destroy(gameObject);
+    }
+    public void SetTarget(Transform target)
+    {
+        player = target;
+        Debug.Log("Enemy assigned target via GameManager: " + (target != null ? target.name : "null"));
     }
 }

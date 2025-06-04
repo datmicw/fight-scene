@@ -2,74 +2,62 @@ using UnityEngine;
 
 public abstract class CharacterControllerBase : MonoBehaviour
 {
-    protected CharacterModel model; // dữ liệu nhân vật
+    protected CharacterModel model;
     [SerializeField] protected CharacterView view;
 
+    protected float lastAttackTime;
+    protected bool isPunching;
+    protected bool isHeadPunching;
+    public CharacterModel Model => model;
 
-    protected float lastAttackTime; // thời gian tấn công cuối cùng
-    protected bool isPunching;      // trạng thái đang đấm
-    protected bool isHeadPunching;  // trạng thái đang đấm đầu
-    public CharacterModel Model => model; // trả về model
-
-    // hàm khởi tạo, lấy view từ component
     protected virtual void Awake()
     {
         if (view == null) view = GetComponent<CharacterView>();
     }
 
-    // khởi tạo model với các chỉ số
     public virtual void InitializeModel(float health, float speed, float damage, float cooldown)
     {
         model = new CharacterModel(health, speed, damage, cooldown);
     }
 
-    // nhận sát thương
     public virtual void TakeDamage(float damage)
-{
-    if (model == null)
     {
-        Debug.LogError($"{gameObject.name} chưa có model.");
-        return;
+        if (model == null)
+        {
+            Debug.LogError($"{gameObject.name} has no model.");
+            return;
+        }
+
+        float before = model.Health;
+        model.TakeDamage(damage);
+        Debug.Log($"{gameObject.name} took {damage} damage. Health: {before} → {model.Health}");
+
+        if (!model.IsAlive())
+        {
+            Debug.Log($"{gameObject.name} has died.");
+            Die();
+        }
     }
 
-    float before = model.Health;
-    model.TakeDamage(damage);
-    Debug.Log($"{gameObject.name} nhận {damage} damage. Máu: {before} → {model.Health}");
-
-    if (!model.IsAlive())
-    {
-        Debug.Log($"{gameObject.name} ĐÃ CHẾT");
-        Die();
-    }
-}
-
-
-    // xử lý khi chết
     protected virtual void Die()
     {
-        view.SetActive(false); // ẩn view
+        view.SetActive(false);
         Debug.Log($"{gameObject.name} has died.");
     }
 
-    // reset máu khi bắt đầu level mới
     public void ResetHealth()
     {
-        if (model == null) return; // nếu không tồn tại model thì không làm gì
-        model.Health = model.MaxHealth; // đặt lại máu về tối đa
-        if (view != null) view.SetActive(true); // hiển thị lại view nếu có
+        if (model == null) return;
+        model.Health = model.MaxHealth;
+        if (view != null) view.SetActive(true);
     }
 
-    // trả về chuỗi máu hiện tại
     internal string GetHealth() => model != null ? $"{model.Health}/{model.MaxHealth}" : "No Model";
 
-    // kiểm tra còn sống không
     public bool IsAlive() => model != null && model.IsAlive();
 
-    // set trạng thái đấm
     public void SetPunching(bool value) => isPunching = value;
-    // kiểm tra có đang đấm không
     public bool IsPunching() => isPunching;
     public void SetHeadPunching(bool value) => isHeadPunching = value;
-    // kiểm tra có đang đấm đầu không
     public bool IsHeadPunching() => isHeadPunching;
 }
