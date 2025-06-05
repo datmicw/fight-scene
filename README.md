@@ -74,12 +74,18 @@ You control your boxer to fight through various game modes with progressively in
   <tr>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/327081db-91c0-4b8f-a5ce-1a0c4f879be9" width="250"/>
+      <br/>
+      <b>Main Menu</b>
     </td>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/b59202f9-f57e-4420-bea1-ff02b23c9074" width="250"/>
+      <br/>
+      <b>Level Start Screen</b>
     </td>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/ca8b83f5-31e2-4ec4-b69a-3c16d531738b" width="250"/>
+      <br/>
+      <b>In-Game Combat</b>
     </td>
   </tr>
 </table>
