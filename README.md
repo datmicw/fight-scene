@@ -78,11 +78,4 @@ You control your boxer to fight through various game modes with progressively in
 
 ---
 
-## 🤝 Contact & Support
-
-For questions or feedback, please contact:  
-**Email:** dat.micf@gmail.com  
-**GitHub:** [github.com/datmicw](https://github.com/datmicw)
----
-
 Thank you for your interest in **BOXING-AREA**! Enjoy your fighting experience!
