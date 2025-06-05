@@ -25,6 +25,7 @@ public class PlayerController : CharacterControllerBase
     }
     private void Update()
     {
+        // nếu nhân vật chết hoặc đang tấn công thì không làm gì
         if (!model.IsAlive() || attackState != AttackState.None) return;
 
         HandleRotation();
@@ -34,6 +35,7 @@ public class PlayerController : CharacterControllerBase
     }
     private void HandleRotation()
     {
+        // xoay nhân vật theo chuột
         float mouseX = input.GetMouseX();
         if (Mathf.Abs(mouseX) > 0.01f)
         {
@@ -42,6 +44,7 @@ public class PlayerController : CharacterControllerBase
     }
     private void HandleMovement()
     {
+        // di chuyển nhân vật về phía trước nếu có input
         float move = input.GetMoveInput();
         if (move > 0.1f)
         {
@@ -58,6 +61,7 @@ public class PlayerController : CharacterControllerBase
     }
     private void HandleInput()
     {
+        // kiểm tra input tấn công thường (chuột trái hoặc chạm màn hình)
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0) && Time.time - lastAttackTime > model.AttackCooldown)
 #else
@@ -69,6 +73,7 @@ public class PlayerController : CharacterControllerBase
     }
     private void HandleHeadPunchInput()
     {
+        // kiểm tra input tấn công mạnh (phím F)
         if (Input.GetKeyDown(KeyCode.F) && Time.time - lastAttackTime > model.AttackCooldown)
         {
             StartHeadPunch();
@@ -76,32 +81,34 @@ public class PlayerController : CharacterControllerBase
     }
     private void StartPunch()
     {
+        // bắt đầu tấn công thường
         attackState = AttackState.Punch;
         view.TriggerPunch();
         view.SetWalking(false);
         lastAttackTime = Time.time;
-        CameraEffectsManager.Instance.Shake();
         Invoke(nameof(EndPunch), punchDuration);
     }
 
     private void StartHeadPunch()
     {
+        // bắt đầu tấn công mạnh
         attackState = AttackState.HeadPunch;
         view.SetHeadPunch();
         view.SetWalking(false);
         lastAttackTime = Time.time;
-        CameraEffectsManager.Instance.Zoom();
         Invoke(nameof(EndHeadPunch), punchDuration);
     }
-    private void EndPunch() => attackState = AttackState.None;
-    private void EndHeadPunch() => attackState = AttackState.None;
+    private void EndPunch() => attackState = AttackState.None; // kết thúc tấn công thường
+    private void EndHeadPunch() => attackState = AttackState.None; // kết thúc tấn công mạnh
     public void DealDamage()
     {
+        // kiểm tra va chạm với enemy trong bán kính 2f
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, 2f);
         foreach (var hit in hitEnemies)
         {
             if (hit.CompareTag("Enemy"))
             {
+                // kiểm tra enemy có ở phía trước không
                 Vector3 toEnemy = (hit.transform.position - transform.position).normalized;
                 if (Vector3.Dot(transform.forward, toEnemy) > 0.5f)
                 {

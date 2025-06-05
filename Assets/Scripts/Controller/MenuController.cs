@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// định nghĩa các chế độ chơi
 public enum GameMode
 {
     OneVsOne = 0,
@@ -11,41 +12,45 @@ public class MenuController : MonoBehaviour
 {
     [SerializeField] private MainMenuView mainMenu;
     [SerializeField] private OptionsMenuView optionsMenu;
-
     private GameMode selectedMode = GameMode.OneVsOne;
 
     private void Start()
     {
+        // bật menu chính, tắt menu tùy chọn khi bắt đầu
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
 
+        // gán sự kiện cho các nút trong menu chính
         mainMenu.playButton.onClick.AddListener(OpenFightScene);
         mainMenu.optionsButton.onClick.AddListener(OpenOptions);
         mainMenu.quitButton.onClick.AddListener(QuitGame);
 
+        // gán sự kiện cho các nút trong menu tùy chọn
         optionsMenu.oneVsOneButton.onClick.AddListener(() => SelectMode(GameMode.OneVsOne));
         optionsMenu.oneVsManyButton.onClick.AddListener(() => SelectMode(GameMode.OneVsMany));
         optionsMenu.backButton.onClick.AddListener(BackToMainMenu);
 
-        // Mặc định chọn 1vs1
+        // mặc định chọn chế độ 1vs1
         SelectMode(GameMode.OneVsOne);
     }
 
+    // chọn chế độ chơi
     private void SelectMode(GameMode mode)
     {
         selectedMode = mode;
         Debug.Log("Selected Mode: " + selectedMode);
     }
 
+    // mở màn chơi
     private void OpenFightScene()
     {
         Debug.Log("Opening fight scene with mode: " + selectedMode);
         PlayerPrefs.SetInt("SelectedGameMode", (int)selectedMode);
         PlayerPrefs.Save();
-
         SceneLoader.LoadFightScene();
     }
 
+    // mở menu tùy chọn
     private void OpenOptions()
     {
         mainMenu.SetActive(false);
@@ -53,6 +58,7 @@ public class MenuController : MonoBehaviour
         Debug.Log("Options menu opened");
     }
 
+    // quay lại menu chính
     private void BackToMainMenu()
     {
         optionsMenu.SetActive(false);
@@ -60,6 +66,7 @@ public class MenuController : MonoBehaviour
         Debug.Log("Back to main menu");
     }
 
+    // thoát game
     private void QuitGame()
     {
         Debug.Log("Quitting game...");

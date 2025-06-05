@@ -30,7 +30,7 @@ public class CharacterModel : ICharacterModel
         Health = Mathf.Max(Health - damage, 0);
         
     }
-
+    
     // kiểm tra nhân vật còn sống hay không
     public bool IsAlive() => Health > 0;
 }

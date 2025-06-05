@@ -29,7 +29,7 @@ public class FollowCamera : MonoBehaviour
             currentOffset += Random.insideUnitSphere * shakeMagnitude;
             shakeDuration -= Time.deltaTime;
         }
-
+    
         Vector3 desiredPosition = target.position + Quaternion.Euler(0, target.eulerAngles.y, 0) * currentOffset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
 
