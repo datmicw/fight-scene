@@ -1,52 +1,88 @@
-# 🥊 Boxing: Multi Mode Combat
+# 🥊 BOXING-AREA: Multi Mode Combat
 
-## 🎮 Giới thiệu
+## 🎮 Introduction
 
-**Boxing** là một game đối kháng 3D màn hình dọc được phát triển bằng Unity.  
-Bạn sẽ điều khiển võ sĩ của mình để chiến đấu qua nhiều chế độ chơi khác nhau với độ khó tăng dần rõ rệt, AI thông minh, và hiệu năng tối ưu hóa nhờ Object Pooling.
-
----
-
-## 🚀 Tính năng nổi bật
-
-- ✅ **3 chế độ chơi hấp dẫn**:
-  - `1 vs 1`: Solo đối kháng tay đôi.
-  - `1 vs Many`: Một mình chống lại nhiều kẻ địch.
-  - `Many vs Many`: Tổ đội đấu tổ đội, bạn chỉ điều khiển 1 player, các nhân vật còn lại do AI điều khiển.
-
-- 🔁 **Tự sinh 10 level / chế độ**:
-  - Mỗi level có độ khó tăng dần.
-  - Enemy tăng máu, sát thương, tốc độ theo cấp số mũ.
-  - Player cũng tăng chỉ số nhẹ để giữ cân bằng.
-
-- 🤖 **AI tự động**:
-  - Enemy AI tự tìm đúng player để tấn công.
-  - Player AI (đồng đội) tự tìm enemy gần nhất để hỗ trợ.
-
-- 🧠 **Object Pooling**:
-  - Tái sử dụng object thay vì Instantiate/Destroy.
-  - Chạy mượt với hơn 50 model có animation đồng thời.
-  - Tối ưu hóa cho mobile và PC.
-
-- 🎥 **Camera động**:
-  - Camera follow player chính tự động trong mọi chế độ.
+**BOXING-AREA** is a vertical 3D fighting game developed with Unity.  
+You control your boxer to fight through various game modes with progressively increasing difficulty, smart AI, and optimized performance using Object Pooling.
 
 ---
 
-## 🛠️ Kỹ thuật sử dụng
+## 🚀 Key Features
 
-| Công nghệ             | Mục đích                                      |
-|----------------------|-----------------------------------------------|
-| Unity (2021.3+)      | Game Engine                                   |
-| C# + OOP             | Viết code game logic theo hướng đối tượng     |
-| MVC Pattern          | Model - View - Controller                     |
-| Animator Controller  | Quản lý animation Walk, Idle, Punch           |
-| Floating Joystick    | Điều khiển mobile/touch                       |
-| Object Pooling       | Quản lý hiệu quả nhiều player/enemy           |
-| Simple AI            | Di chuyển + tấn công tự động thông minh       |
+- ✅ **3 Exciting Game Modes**:
+  - **1 vs 1**: Solo one-on-one combat.
+  - **1 vs Many**: Fight against multiple enemies alone.
+
+- 🔁 **Procedurally Generated Levels**:
+  - Automatically generates 10 levels per mode.
+  - Difficulty increases exponentially.
+  - Enemies gain more health, damage, and speed.
+  - Player stats increase slightly to keep balance.
+
+- 🤖 **Smart AI**:
+  - Enemy AI automatically targets the player.
+  - Advanced AI features such as dodging and counterattacking (under development).
+
+- 🎥 **Dynamic Camera**:
+  - Camera smoothly follows the main player across all modes.
+
+- ⚡ **Optimized Performance**:
+  - Uses Object Pooling to reuse objects and reduce lag.
 
 ---
 
-## 🧪 Hệ thống tự sinh level
+## 🛠️ Technologies Used
 
-- Tăng level sau mỗi lần tiêu diệt hết enemy.
+| Technology          | Purpose                                    |
+|---------------------|--------------------------------------------|
+| Unity (2021.3+)     | Game engine for 3D development             |
+| C# + OOP            | Object-oriented programming for game logic|
+| MVC Pattern         | Clear separation of Model-View-Controller  |
+| Animator Controller | Manage animations (Walk, Idle, Punch)      |
+| Simple AI           | Automatic movement and attack behaviors    |
+
+---
+
+## 🧪 Level Progression System
+
+- Players level up after defeating all enemies in a level.
+- Difficulty ramps up significantly on each level.
+- Enemy stats increase faster to keep challenge high.
+- Player stats increase moderately for balance.
+
+---
+
+## 🔮 Upcoming Features
+
+- **Combo System**: Different attack combos triggered by consecutive inputs.
+- **Advanced AI**: Enemies can dodge attacks and counterattack.
+
+---
+
+## 📁 Project Structure
+
+- **Scripts/**: Contains C# scripts following MVC architecture.
+- **Prefabs/**: Ready-to-use game object prefabs.
+- **Animations/**: Animation controllers and clips.
+- **Scenes/**: Game scenes.
+- **UI/**: User interface prefabs and scripts.
+
+---
+
+## 📌 How to Run
+
+1. Open the project in Unity Editor (version 2021.3 or later).
+2. Open the main scene from the Scenes folder.
+3. Press Play to start the game.
+4. Select a game mode and enjoy the fight.
+
+---
+
+## 🤝 Contact & Support
+
+For questions or feedback, please contact:  
+**Email:** dat.micf@gmail.com  
+**GitHub:** [github.com/datmicw](https://github.com/datmicw)
+---
+
+Thank you for your interest in **BOXING-AREA**! Enjoy your fighting experience!
