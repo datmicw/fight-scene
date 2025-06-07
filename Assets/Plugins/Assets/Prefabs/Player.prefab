@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af571b6a74212bc429dd39e298d39818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: {fileID: 0}
+  view: {fileID: 2063136526214446776}
   mouseSensitivity: 100
   punchDuration: 0.6
   punchDamage: 10
@@ -173,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb4f22acfd8451b4fb5003d2c6784cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  punchClip: {fileID: 8300000, guid: c48b438852d774b4a817d65b79aa4cc0, type: 3}
 --- !u!114 &6989612527784855945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,7 +482,6 @@ GameObject:
   m_Component:
   - component: {fileID: 153268799981237285}
   - component: {fileID: 3747966292349593504}
-  - component: {fileID: 2636981406917167018}
   m_Layer: 0
   m_Name: 'FollowCamera '
   m_TagString: Untagged
@@ -519,18 +519,6 @@ MonoBehaviour:
   target: {fileID: 1472534878499146288}
   offset: {x: -10, y: 20, z: -8}
   smoothSpeed: 10
---- !u!114 &2636981406917167018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3452046160149961398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7773aea7a8281548b95b8af26836936, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3461194607445158576
 GameObject:
   m_ObjectHideFlags: 0

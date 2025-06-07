@@ -3,6 +3,10 @@ using UnityEngine;
 // lớp cơ sở cho controller của nhân vật
 public abstract class CharacterControllerBase : MonoBehaviour
 {
+    private float lastDamageTime = -1f;
+    [SerializeField] private float damageCooldown = 0.3f; // thời gian miễn nhiễm (0.3s)
+
+
     protected CharacterModel model; // lưu trữ model của nhân vật
     [SerializeField] protected CharacterView view; // tham chiếu đến view của nhân vật
 
@@ -26,6 +30,14 @@ public abstract class CharacterControllerBase : MonoBehaviour
     // nhận sát thương
     public virtual void TakeDamage(float damage)
     {
+        if (Time.time - lastDamageTime < damageCooldown)
+        {
+            Debug.Log($"[IFrame] {gameObject.name} đang miễn nhiễm, không nhận damage.");
+            return;
+        }
+
+        lastDamageTime = Time.time;
+
         if (model == null)
         {
             Debug.LogError($"{gameObject.name} has no model.");
@@ -36,13 +48,13 @@ public abstract class CharacterControllerBase : MonoBehaviour
         model.TakeDamage(damage);
         Debug.Log($"{gameObject.name} took {damage} damage. Health: {before} → {model.Health}");
 
-        // kiểm tra nếu đã chết thì gọi Die
         if (!model.IsAlive())
         {
             Debug.Log($"{gameObject.name} has died.");
             Die();
         }
     }
+
 
     // xử lý khi chết
     protected virtual void Die()

@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// định nghĩa các chế độ chơi
 public enum GameMode
 {
     OneVsOne = 0,
@@ -10,38 +9,48 @@ public enum GameMode
 
 public class MenuController : MonoBehaviour
 {
+    [Header("Audio")]
+    [SerializeField] private AudioClip clickSound;
+    [SerializeField] private AudioSource audioSource;
+
+    [Header("Menu Views")]
     [SerializeField] private MainMenuView mainMenu;
     [SerializeField] private OptionsMenuView optionsMenu;
+
     private GameMode selectedMode = GameMode.OneVsOne;
 
     private void Start()
     {
-        // bật menu chính, tắt menu tùy chọn khi bắt đầu
+        if (clickSound == null)
+        {
+            Debug.LogWarning("clickSound is null. Gán âm thanh trong Inspector.");
+        }
+
+        if (audioSource == null)
+        {
+            Debug.LogWarning("audioSource is null. Gán AudioSource trong Inspector.");
+        }
+
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
 
-        // gán sự kiện cho các nút trong menu chính
-        mainMenu.playButton.onClick.AddListener(OpenFightScene);
-        mainMenu.optionsButton.onClick.AddListener(OpenOptions);
-        mainMenu.quitButton.onClick.AddListener(QuitGame);
+        mainMenu.playButton.onClick.AddListener(() => { PlayClickSound(); OpenFightScene(); });
+        mainMenu.optionsButton.onClick.AddListener(() => { PlayClickSound(); OpenOptions(); });
+        mainMenu.quitButton.onClick.AddListener(() => { PlayClickSound(); QuitGame(); });
 
-        // gán sự kiện cho các nút trong menu tùy chọn
-        optionsMenu.oneVsOneButton.onClick.AddListener(() => SelectMode(GameMode.OneVsOne));
-        optionsMenu.oneVsManyButton.onClick.AddListener(() => SelectMode(GameMode.OneVsMany));
-        optionsMenu.backButton.onClick.AddListener(BackToMainMenu);
+        optionsMenu.oneVsOneButton.onClick.AddListener(() => { PlayClickSound(); SelectMode(GameMode.OneVsOne); });
+        optionsMenu.oneVsManyButton.onClick.AddListener(() => { PlayClickSound(); SelectMode(GameMode.OneVsMany); });
+        optionsMenu.backButton.onClick.AddListener(() => { PlayClickSound(); BackToMainMenu(); });
 
-        // mặc định chọn chế độ 1vs1
         SelectMode(GameMode.OneVsOne);
     }
 
-    // chọn chế độ chơi
     private void SelectMode(GameMode mode)
     {
         selectedMode = mode;
         Debug.Log("Selected Mode: " + selectedMode);
     }
 
-    // mở màn chơi
     private void OpenFightScene()
     {
         Debug.Log("Opening fight scene with mode: " + selectedMode);
@@ -50,7 +59,6 @@ public class MenuController : MonoBehaviour
         SceneLoader.LoadFightScene();
     }
 
-    // mở menu tùy chọn
     private void OpenOptions()
     {
         mainMenu.SetActive(false);
@@ -58,7 +66,6 @@ public class MenuController : MonoBehaviour
         Debug.Log("Options menu opened");
     }
 
-    // quay lại menu chính
     private void BackToMainMenu()
     {
         optionsMenu.SetActive(false);
@@ -66,10 +73,21 @@ public class MenuController : MonoBehaviour
         Debug.Log("Back to main menu");
     }
 
-    // thoát game
     private void QuitGame()
     {
         Debug.Log("Quitting game...");
         SceneLoader.QuitGame();
+    }
+
+    private void PlayClickSound()
+    {
+        if (audioSource != null && audioSource.enabled && audioSource.gameObject.activeInHierarchy)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+        else
+        {
+            Debug.LogWarning("Cannot play sound: AudioSource is disabled or inactive.");
+        }
     }
 }

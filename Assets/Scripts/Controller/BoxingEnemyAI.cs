@@ -15,6 +15,7 @@ public class BoxingEnemyAI : CharacterControllerBase
     {
         base.Awake();
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         view = GetComponent<CharacterView>();
         InitializeModel(100, 5, 5, 1);
     }
@@ -33,7 +34,7 @@ public class BoxingEnemyAI : CharacterControllerBase
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         // nếu không có player thì dừng lại
         if (player == null)
