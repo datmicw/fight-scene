@@ -8,7 +8,6 @@ public class CharacterView : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioClip punchClip;   // drag your clip here
     private AudioSource sfx;
-    // thuộc tính animator, chỉ cho phép đọc bên ngoài
     public Animator Animator { get; private set; }
 
     // hàm awake, lấy component animator khi khởi tạo

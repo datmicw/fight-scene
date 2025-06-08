@@ -3,11 +3,11 @@ using UnityEngine.UI;
 
 public class OptionsMenuView : MonoBehaviour
 {
-    [SerializeField] private Canvas optionsMenuCanvas;
+    // [SerializeField] private Canvas optionsMenuCanvas;
 
     public Button oneVsOneButton;
     public Button oneVsManyButton;
     public Button backButton;
 
-    public void SetActive(bool active) => optionsMenuCanvas.gameObject.SetActive(active);
+    public void SetActive(bool active) => gameObject.SetActive(active);
 }
