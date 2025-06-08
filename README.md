@@ -35,7 +35,7 @@ You control your boxer to fight through various game modes with progressively in
 
 | Technology          | Purpose                                    |
 |---------------------|--------------------------------------------|
-| Unity (2021.3+)     | Game engine for 3D development             |
+| Unity (2023.3.56f1)     | Game engine for 3D development             |
 | C# + OOP            | Object-oriented programming for game logic|
 | MVC Pattern         | Clear separation of Model-View-Controller  |
 | Animator Controller | Manage animations (Walk, Idle, Punch)      |
